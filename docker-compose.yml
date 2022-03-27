@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+   sqlparse:
+      build: ./sqlparse
+      hostname: sqlparse 
+      env_file:
+         - ./sqlparse/.env
