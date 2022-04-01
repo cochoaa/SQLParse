@@ -2,6 +2,8 @@ version: '3.7'
 services:
    sqlparse:
       build: ./sqlparse
-      hostname: sqlparse 
+      hostname: sqlparse
+      ports:
+         - 0.0.0.0:5555:5000 
       env_file:
          - ./sqlparse/.env
