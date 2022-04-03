@@ -1,4 +1,5 @@
-from flask import Flask, render_template,send_from_directory
+from flask import Flask, render_template,send_from_directory,request, jsonify
+from statamentService import select_converter
 import os
 app = Flask(__name__)
 # app.add_url_rule('/favicon.ico',
@@ -11,7 +12,7 @@ def favicon():
 @app.route('/')
 def index():
     data = {
-        'titulo': 'Convesor de Sentencias SQL'
+        'titulo': 'Programa Automatico de Procesamiento Unificado'
     }
     return render_template('index.html', data=data)
 
@@ -23,5 +24,17 @@ def conveter():
         'querys_output': ''
     }
     return render_template('converter_statament.html', data=data)
+
+@app.route('/api/converter',methods=['POST'])
+def api_conveter():
+    data_input = request.get_json()
+    print(data_input)
+    print(type(data_input))
+    string_stataments=select_converter(data_input.get('querys_input'))
+    print(type(string_stataments))
+    data_output = {
+        'queries_output': string_stataments
+    }
+    return jsonify(data_output)
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port=8000,debug=True)

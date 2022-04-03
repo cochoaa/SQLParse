@@ -1,12 +1,15 @@
 {% extends './template.html' %}
 {% block body %}
     <h1>{{ data.titulo}}</h1>
-    <label for="querys">Ingrese las sentencias SQL separadas por ';':</label>
+    <label for="queries_input">Ingrese las sentencias SQL separadas por: ';'</label>
     <br>
-    <textarea  id="querys" name="querys" rows="10" cols="100"/>{{ data.querys_input}}</textarea>
-    <button>Convertir a Select</button>
+    <label for="queries_input">Tipo de comentario permitido: /*  */</label>
     <br>
-    <label for="selects">Sentencias Select:</label>
+    <textarea  id="queries_input" name="queries_input" rows="10" cols="200"/>{{ data.querys_input}}</textarea>
     <br>
-    <textarea  id="selects" name="querys" rows="10" cols="100"/>{{ data.querys_output}}</textarea>
+    <button id="button_converter">Convertir a Select</button>
+    <br>
+    <label for="queries_output">Sentencias Select:</label>
+    <br>
+    <textarea  id="queries_output" name="queries_output" rows="10" cols="200"/>{{ data.querys_output}}</textarea>
 {% endblock %}
