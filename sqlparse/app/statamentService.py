@@ -26,7 +26,7 @@ def select_converter(string_stataments: str):
         print('Statement Inicial: ' + str(statament))
         string_select=''
         if statament.get_type()!='INSERT' and statament.get_type()!='SELECT':
-            string_select = statament_converter(statament)
+            string_select = str(get_statament_converted(statament))
         list_select.append(string_select)
         print('Statement Final: ' + str(string_select))
     return list_select;
@@ -39,7 +39,7 @@ def validate_stataments(tuple_statament):
         # if statament.get_type() == 'SELECT':
         #     raise Exception("Sentencia SELECT no es permitida :" + str(statament))
 
-def statament_converter(statament: Statement):
+def get_statament_converted(statament: Statement):
     list_tokens=statament.tokens
     if statament.get_type() == 'UPDATE':
         list_tokens.pop(0)
@@ -56,7 +56,7 @@ def statament_converter(statament: Statement):
         list_tokens.insert(0,token_select)
         list_tokens.insert(1,token_space)
         list_tokens.insert(2,token_asterist)
-    return str(statament);
+    return statament;
 
 
 
