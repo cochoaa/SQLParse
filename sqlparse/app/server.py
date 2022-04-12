@@ -28,12 +28,9 @@ def conveter():
 @app.route('/api/converter',methods=['POST'])
 def api_conveter():
     data_input = request.get_json()
-    print(data_input)
-    print(type(data_input))
-    string_stataments=select_converter(data_input.get('querys_input'))
-    print(type(string_stataments))
+    list_stataments=select_converter(data_input.get('querys_input'))
     data_output = {
-        'queries_output': string_stataments
+        'queries_output': list_stataments
     }
     return jsonify(data_output)
 if __name__ == '__main__':
