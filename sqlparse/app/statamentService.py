@@ -46,10 +46,9 @@ def get_stat_select_from():
     stat_select_from=[token_select,token_space,token_asterist,token_space,token_from]
     return stat_select_from;
 
-def replace_dml_for_select(statament: Statement):
+def insert_dml_select(statament: Statement):
     list_tokens = statament.tokens
     stat_select_from=get_stat_select_from()
-    del list_tokens[0]
     list_tokens[0:0]=stat_select_from
 
 def is_token_set(token:Token):
@@ -76,18 +75,23 @@ def remove_keyword_set(statament: Statement):
     else:
         del list_tokens[index_token_set:index_token_final]
 
+def remove_first_tokens(statament: Statement,n:int):
+    list_tokens = statament.tokens
+    for i in range(n) :
+        del list_tokens[0]
 
 def get_statament_converted(statament: Statement):
     DML_TYPE=statament.get_type()
-    if DML_TYPE in {'UPDATE', 'DELETE'}:
-        replace_dml_for_select(statament)
-        if DML_TYPE in {'UPDATE'}:
-            remove_keyword_set(statament)
+    if DML_TYPE in {'DELETE'}:
+        remove_first_tokens(statament,3)
+    elif DML_TYPE in {'UPDATE'}:
+        remove_keyword_set(statament)
+        remove_first_tokens(statament,1)
+    insert_dml_select(statament)
     return statament;
 
 if __name__ == "__main__":
     strings_query = '''
-    
     '''
     list_querys_select=select_converter(strings_query)
     print('/*---------Select generado por Conveter SQL---------------------------------------*/')
