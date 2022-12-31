@@ -1,4 +1,5 @@
 import sqlparse
+import re
 from sqlparse.sql import Statement, Token, Where
 from sqlparse import tokens as TokenType
 
@@ -18,10 +19,22 @@ def format_statament(string:str):
 
 def remove_all_extra_spaces(string:str):
     string=" ".join(string.split())
+    return string
+def remove_all_extra_coments(string:str):
+    regex = "--.*"
+    filtered_lines = []
+    for line in string.splitlines():
+        result = re.search(regex,line)
+        if result:
+            token = result.group()
+            line = line.replace(token,'')
+        filtered_lines.append(line)
+    string="\r".join(filtered_lines)
     return format_statament(string)
 
 def select_converter(string_stataments: str):
-    string_stataments=remove_all_extra_spaces(string_stataments)
+    string_stataments=remove_all_extra_coments(string_stataments)
+    string_stataments = remove_all_extra_spaces(string_stataments)
     tuple_statament = sqlparse.parse(string_stataments)
     print("Cantidad de querys: " + str(len(tuple_statament)))
     validate_stataments(tuple_statament)
@@ -92,6 +105,10 @@ def get_statament_converted(statament: Statement):
 
 if __name__ == "__main__":
     strings_query = '''
+    --------------------------------------- CONTINUACION ---------------------------------------------
+  DELETE FROM bytsscom_bytsig.registro_hoja_ruta_det WHERE id_registro_hr=116814 AND id_hoja_ruta=75127;
+  DELETE /**/FROM bytsscom_bytsig.registro_hoja_ruta_det WHERE id_registro_hr=116814 AND id_corr=8; -- otro coment
+----
     '''
     list_querys_select=select_converter(strings_query)
     print('/*---------Select generado por Conveter SQL---------------------------------------*/')
