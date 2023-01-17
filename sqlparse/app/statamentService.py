@@ -1,5 +1,6 @@
 import sqlparse
 import re
+from checkSintax import check_statament
 from sqlparse.sql import Statement, Token, Where
 from sqlparse import tokens as TokenType
 
@@ -32,6 +33,12 @@ def remove_all_extra_coments(string:str):
     string="\r".join(filtered_lines)
     return format_statament(string)
 
+def check_syntax_statament(query:str):
+     success, msg=check_statament(query)
+     print(msg)
+     if not success:
+        raise Exception(msg)
+
 def select_converter(string_stataments: str):
     string_stataments=remove_all_extra_coments(string_stataments)
     string_stataments = remove_all_extra_spaces(string_stataments)
@@ -39,14 +46,21 @@ def select_converter(string_stataments: str):
     print("Cantidad de querys: " + str(len(tuple_statament)))
     validate_stataments(tuple_statament)
     list_select = []
+    error=False
     for statament in tuple_statament:
         print('Statement Inicial: ' + str(statament))
         string_select=''
         if statament.get_type()!='INSERT' and statament.get_type()!='SELECT':
-            string_select = str(get_statament_converted(statament))
-        list_select.append(string_select)
+            try:
+                check_syntax_statament(str(statament))
+                string_select = str(get_statament_converted(statament))
+            except Exception as e:
+                string_select=str(e)
+                error = True
+            print(string_select)
+            list_select.append(string_select)
         print('Statement   Final: ' + str(string_select))
-    return list_select;
+    return error,list_select;
 
 def validate_stataments(tuple_statament):
     for statament in tuple_statament:
@@ -104,13 +118,12 @@ def get_statament_converted(statament: Statement):
     return statament;
 
 if __name__ == "__main__":
-    strings_query = '''
+    strings = '''
     --------------------------------------- CONTINUACION ---------------------------------------------
-  DELETE FROM bytsscom_bytsig.registro_hoja_ruta_det WHERE id_registro_hr=116814 AND id_hoja_ruta=75127;
-  DELETE /**/FROM bytsscom_bytsig.registro_hoja_ruta_det WHERE id_registro_hr=116814 AND id_corr=8; -- otro coment
+  UPDATE bytsscom_bytsig.contrato_progdes SET mont_progdes = 38449.75 WHERE id_contrato= 127982 WHERE id_progdesembolso = 16053;
 ----
     '''
-    list_querys_select=select_converter(strings_query)
+    list_querys_select=select_converter(strings)
     print('/*---------Select generado por Conveter SQL---------------------------------------*/')
     for query in list_querys_select:
         print(query)
