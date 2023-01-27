@@ -120,7 +120,13 @@ def get_statament_converted(statament: Statement):
 if __name__ == "__main__":
     strings = '''
     --------------------------------------- CONTINUACION ---------------------------------------------
-  UPDATE bytsscom_bytsig.contrato_progdes SET mont_progdes = 38449.75 WHERE id_contrato= 127982 WHERE id_progdesembolso = 16053;
+UPDATE bytsscom_bytpoa.plan_pim_transferencia  ppt
+SET monto_trans = tbl.tresmeeses
+FROM (SELECT  id_plan_pim_trans, trunc((monto_trans / 12 )*3,2) AS tresmeeses
+FROM bytsscom_bytpoa.plan_pim_transferencia  where estado_trans != 'X' AND id_plan_pim_trans in (5661,5660,5659,5658,5657,5656,5655,5654,5653,5652,5651,5650,5649,5648,5647,5646,
+										5645,5644,5643,5642,5641,5640,5639,5638,5637,5636,5635,5634,5633,5632)) tbl
+										WHERE  tbl.id_plan_pim_trans = ppt.id_plan_pim_trans;
+SELECT bytsscom_bytpoa.cuadro_necesidades_activate(6);
 ----
     '''
     list_querys_select=select_converter(strings)
