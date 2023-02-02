@@ -6,7 +6,7 @@ def check_statament(query:str):
     message=''
     if not success:
         # possibly show the filename with the error message
-        message =  msg  + ' --> ' + query
+        message =  msg
     return success,message
 
 if __name__ == "__main__":
