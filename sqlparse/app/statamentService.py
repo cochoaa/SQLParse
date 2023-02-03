@@ -46,30 +46,25 @@ def select_converter(string_stataments: str):
     string_stataments = remove_all_extra_spaces(string_stataments)
     tuple_statament = sqlparse.parse(string_stataments)
     print("Cantidad de querys: " + str(len(tuple_statament)))
-    #validate_stataments(tuple_statament)
+
     list_select = []
+    list_errors = []
     error=False
     for statament in tuple_statament:
         print('Statement Inicial: ' + str(statament))
         string_select=''
-        if statament.get_type()!='INSERT' and statament.get_type()!='SELECT':
-            try:
-                check_syntax_statament(str(statament))
+        try:
+            check_syntax_statament(str(statament))
+            if statament.get_type() != 'INSERT' and statament.get_type() != 'SELECT':
                 string_select = str(get_statament_converted(statament))
-            except Exception as e:
-                string_select=str(e)
-                error = True
-            print(string_select)
-            list_select.append(string_select)
+        except Exception as e:
+            error = True
+            list_errors.append(str(e))
+        list_select.append(string_select)
         print('Statement   Final: ' + str(string_select))
+    if error:
+        list_select=list_errors
     return error,list_select
-
-def validate_stataments(tuple_statament):
-    for statament in tuple_statament:
-        if statament.get_type() == 'UNKNOWN':
-            raise Exception("Sintasis Incorrecta:  " + str(statament))
-        # if statament.get_type() == 'SELECT':
-        #     raise Exception("Sentencia SELECT no es permitida :" + str(statament))
 
 def get_stat_select_from():
     stat_select_from=[token_select,token_space,token_asterist,token_space,token_from]
